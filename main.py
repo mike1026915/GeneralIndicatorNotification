@@ -1,4 +1,5 @@
-
+from indicatorwatcher import IndicatorWatcher
+from notifier import Notifier
 if __name__ == "__main__":
     to_be_notified = IndicatorWatcher("data_config.json").execute()
     if to_be_notified:
