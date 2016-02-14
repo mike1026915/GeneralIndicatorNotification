@@ -1,2 +1,9 @@
 beautifulsoup4
 request
+dict
+public
+self
+decorator
+get
+query_string
+post
