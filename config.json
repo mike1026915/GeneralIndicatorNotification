@@ -1,10 +1,20 @@
 [
     {
-      'name': "JPY in Band of Taiwan",
-      'xpath': ".//*[@id='slice1']/div[2]/table[2]/tbody/tr[10]/td[2]",
-      'condition': "< 0.27",
-      'message': "JPY "
+      'web': 'http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm',
+      'indicator':
+      [
+          {
+              'name': "JPY in Band of Taiwan",
+              'xpath': ".//*[@id='slice1']/div[2]/table[2]/tbody/tr[10]/td[2]",
+              'condition': "< 0.27",
+              'message': "JPY "
+          },
+          {
+              'name': "USD in Band of Taiwan",
+              'xpath': ".//*[@id='slice1']/div[2]/table[2]/tbody/tr[3]/td[2]",
+              'condition': "<30",
+              'message': "USD is less than 30 dollars "
+          }
+      ]
     }
-      
-
 ]
