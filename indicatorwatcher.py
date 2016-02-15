@@ -1,25 +1,20 @@
 import json
-import requests
 import urllib2
 from lxml import etree
-from bs4 import BeautifulSoup
+
 
 class IndicatorWatcher(object):
     def __init__(self, indicator_config):
-        with open(indicator_config) as f:
-            self.config_data = json.load(f)
-
-    
+        with open(indicator_config) as config_file:
+            self._config_data = json.load(config_file)
 
     def execute(self):
         result_list = []
-        for web in self.config_data:
-            url = web['url']
-            indicators = web['indicators']
-            response = urllib2.urlopen(url)
+        for web in self._config_data:
+            response = urllib2.urlopen(web['url'])
             htmlparser = etree.HTMLParser()
             tree = etree.parse(response, htmlparser)
-            for indicator in indicators:
+            for indicator in web['indicators']:
                 xpath = indicator['xpath']
                 find_list = tree.xpath(xpath)
                 if find_list:
@@ -31,7 +26,6 @@ class IndicatorWatcher(object):
                             name = indicator['name']
                             message = indicator['message']
                             result_list.append({'name': name, 'value': value, 'message': message})
-                        
                     except ValueError:
                         print "Value error, %s is not a digit" % find_list[0].text
                     except BaseException as e:
