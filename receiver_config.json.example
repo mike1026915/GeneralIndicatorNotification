@@ -1,0 +1,23 @@
+[
+    {
+        "name":"User1",
+        "push_method":"qpush",
+        "credentials":{
+            "device_name":"",
+            "device_pushcode":"",
+        },
+        "monitor_indicators": [
+            "JPY in Bank of Taiwan"
+        ]
+    },
+    {
+        "name":"User2",
+        "push_method":"pushbullet",
+        "credentials":{
+            "access_token":""
+        },
+        "monitor_indicators": [
+            "USD in Bank of Taiwan"
+        ]
+    }
+]
