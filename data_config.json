@@ -4,13 +4,13 @@
         "indicators":
         [
             {
-                "name": "JPY in Band of Taiwan",
+                "name": "JPY in Bank of Taiwan",
                 "xpath": ".//*[@id='slice1']/div[2]/table[2]/tr[10]/td[2]",
                 "condition": "< 0.30",
                 "message": "JPY "
             },
             {
-                "name": "USD in Band of Taiwan",
+                "name": "USD in Bank of Taiwan",
                 "xpath": "//*[@id='slice1']/div[2]/table[2]/tr[3]/td[2]",
                 "condition": "<35",
                 "message": "USD is less than 30 dollars "
