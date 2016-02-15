@@ -26,6 +26,8 @@ Temporary Items
 # VIM temp file
 .swap
 
-
 # Python generated binary file
 *.pyc
+
+# Config files
+*_config.json
