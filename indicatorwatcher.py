@@ -17,17 +17,14 @@ class IndicatorWatcher(object):
             for indicator in web['indicators']:
                 xpath = indicator['xpath']
                 find_list = tree.xpath(xpath)
-                if find_list:
+                for result in find_list:
                     try:
-                        value = float(find_list[0].text)
                         condition = indicator['condition']
-                        full_condition = str(value) + condition
+                        full_condition = result.text + condition
                         if eval(full_condition):
                             name = indicator['name']
                             message = indicator['message']
-                            result_list.append({'name': name, 'value': value, 'message': message})
-                    except ValueError:
-                        print "Value error, %s is not a digit" % find_list[0].text
+                            result_list.append({'name': name, 'value': result.text, 'message': message})
                     except BaseException as e:
                         print "Unexpected Error. %s" % str(e)
                 else:
