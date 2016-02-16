@@ -4,7 +4,7 @@
         "push_method":"qpush",
         "credentials":{
             "device_name":"",
-            "device_pushcode":"",
+            "device_pushcode":""
         },
         "monitor_indicators": [
             "JPY in Bank of Taiwan"
