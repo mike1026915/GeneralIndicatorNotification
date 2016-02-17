@@ -44,3 +44,10 @@ class IndicatorWatcher(object):
                 else:
                     print "It doesn't find anything based on the given xpath"
         return result_list
+
+if __name__ == "__main__":
+    assert IndicatorWatcher('data_config.json')._eval_condition("5", "< 10") == True, "Test case1"
+    assert IndicatorWatcher('data_config.json')._eval_condition("5", "< 10 & >= 1") == True, "Test case2"
+    assert IndicatorWatcher('data_config.json')._eval_condition("abc", "== 'abc'") == True, "Test case3"
+    assert IndicatorWatcher('data_config.json')._eval_condition("a", "in 'abc'") == True, "Test case4"
+    assert IndicatorWatcher('data_config.json')._eval_condition("15", "< 20 | > 15") == True, "Test case5"
