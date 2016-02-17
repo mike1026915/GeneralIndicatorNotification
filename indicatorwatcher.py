@@ -8,20 +8,34 @@ class IndicatorWatcher(object):
         with open(indicator_config) as config_file:
             self._config_data = json.load(config_file)
 
+    def _get_web_page_etree(self,url):
+        """
+            Given url, it returns the etree object
+        """
+        response = urllib2.urlopen(url)
+        htmlparser = etree.HTMLParser()
+        tree = etree.parse(response, htmlparser)
+        return tree
+
+    def _get_xpath_result(self, tree, xpath):
+        """
+            It returns the element list speicified by xpath in the xml tree
+        """
+        return tree.xpath(xpath)
+
+    def _eval_condition(self, result_value, condition):
+        full_condition = result_value + condition
+        return eval(full_condition)
+
     def execute(self):
         result_list = []
         for web in self._config_data:
-            response = urllib2.urlopen(web['url'])
-            htmlparser = etree.HTMLParser()
-            tree = etree.parse(response, htmlparser)
+            tree = self._get_web_page_etree(web['url'])
             for indicator in web['indicators']:
-                xpath = indicator['xpath']
-                find_list = tree.xpath(xpath)
+                find_list = self._get_xpath_result(tree, indicator['xpath'])
                 for result in find_list:
                     try:
-                        condition = indicator['condition']
-                        full_condition = result.text + condition
-                        if eval(full_condition):
+                        if self._eval_condition(result.text, indicator['condition']):
                             name = indicator['name']
                             message = indicator['message']
                             result_list.append({'name': name, 'value': result.text, 'message': message})
