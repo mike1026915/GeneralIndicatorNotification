@@ -37,8 +37,9 @@ class Notifier(object):
             msg_strs[user] = ""
 
         for msg in message_queue:
-            for user in self._indicator_watchers[msg['name']]:
-                msg_strs[user] += msg['message'] + "\n"
+            if msg['name'] in self._indicator_watchers:
+                for user in self._indicator_watchers[msg['name']]:
+                    msg_strs[user] += msg['message'] + "\n"
 
         for user, msg in msg_strs.iteritems():
             if msg != "":
