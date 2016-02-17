@@ -72,6 +72,9 @@ class IndicatorWatcher(object):
             tree = self._get_web_page_etree(web['url'])
             for indicator in web['indicators']:
                 find_list = self._get_xpath_result(tree, indicator['xpath'])
+                if len(find_list) == 0:
+                    print "It doesn't find anything based on the given xpath"
+                    return {}
                 for result in find_list:
                     try:
                         if self._eval_condition(result.text, indicator['condition'].strip()):
@@ -80,11 +83,12 @@ class IndicatorWatcher(object):
                             result_list.append({'name': name, 'value': result.text, 'message': message})
                     except BaseException as e:
                         print "Unexpected Error. %s" % str(e)
-                else:
-                    print "It doesn't find anything based on the given xpath"
         return result_list
 
 if __name__ == "__main__":
+    iw = IndicatorWatcher('data_config.json')
+    tree = iw._get_web_page_etree('http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm')
+    print iw._get_xpath_result(tree, "//*[@id='slice1']/div[2]/table[2]/tr[3]/td[2]")
     assert IndicatorWatcher('data_config.json')._eval_condition("5", "< 10") == True, "Test case1"
     assert IndicatorWatcher('data_config.json')._eval_condition("5", "< 10 & >= 1") == True, "Test case2"
     assert IndicatorWatcher('data_config.json')._eval_condition("abc", "== 'abc'") == True, "Test case3"

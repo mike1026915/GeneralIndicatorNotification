@@ -1,5 +1,5 @@
 import urllib, urllib2
-
+import json
 def qpush_send(user, msg):
     url = "https://qpush.me/pusher/push_site/"
     headers = {
@@ -28,5 +28,23 @@ def pushbullet_send(user, msg):
     print "Pushbullet"
     print "Send to :" + user.name
     print "msg : {" + msg + "}"
+    url = 'https://api.pushbullet.com/v2/pushes'
+
+    header = {
+        'Access-Token': user.credentials["access_token"], 
+        'Content-Type':'application/json'
+    }
+
+    data = {
+        "body": str(msg), 
+        "title": "[General Indicator Notification]", 
+        "type":"note"
+    }
+    data= json.dumps(data)
+    print type(data), data
+    req = urllib2.Request(url, data=data, headers=header)
+    response = urllib2.urlopen(req)
+    print response    
+
 
 SEND_METHOD = {"qpush":qpush_send, "pushbullet":pushbullet_send}

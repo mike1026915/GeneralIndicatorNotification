@@ -12,7 +12,7 @@
             {
                 "name": "USD in Bank of Taiwan",
                 "xpath": "//*[@id='slice1']/div[2]/table[2]/tr[3]/td[2]",
-                "condition": "<35",
+                "condition": "< 35",
                 "message": "USD is less than 30 dollars "
             }
         ]
