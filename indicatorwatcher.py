@@ -75,9 +75,10 @@ class IndicatorWatcher(object):
                 if len(find_list) == 0:
                     message =  "It doesn't find anything based on the given xpath. Please check the xpath"
                     print message
-                    result_list.append({'name': name, 'value': "N/A", 'message': message})
+                    result_list.append({'name': indicator['name'], 'value': "N/A", 'message': message})
                     continue
                 for result in find_list:
+                    print indicator['name'], indicator['xpath'], result.text
                     try:
                         if self._eval_condition(result.text, indicator['condition'].strip()):
                             name = indicator['name']
