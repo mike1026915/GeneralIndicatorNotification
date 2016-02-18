@@ -73,8 +73,10 @@ class IndicatorWatcher(object):
             for indicator in web['indicators']:
                 find_list = self._get_xpath_result(tree, indicator['xpath'])
                 if len(find_list) == 0:
-                    print "It doesn't find anything based on the given xpath"
-                    return {}
+                    message =  "It doesn't find anything based on the given xpath. Please check the xpath"
+                    print message
+                    result_list.append({'name': name, 'value': "N/A", 'message': message})
+                    continue
                 for result in find_list:
                     try:
                         if self._eval_condition(result.text, indicator['condition'].strip()):
