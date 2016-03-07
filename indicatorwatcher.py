@@ -78,7 +78,7 @@ class IndicatorWatcher(object):
                     result_list.append({'name': indicator['name'], 'value': "N/A", 'message': message})
                     continue
                 for result in find_list:
-                    print indicator['name'], indicator['xpath'], result.text
+                    print indicator['name'].encode("utf8"), indicator['xpath'].encode("utf8"), result.text,
                     try:
                         if self._eval_condition(result.text, indicator['condition'].strip()):
                             name = indicator['name']
