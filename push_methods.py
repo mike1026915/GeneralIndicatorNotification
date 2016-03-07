@@ -36,7 +36,7 @@ def pushbullet_send(user, msg):
     }
 
     data = {
-        "body": str(msg), 
+        "body": msg, 
         "title": "[General Indicator Notification]", 
         "type":"note"
     }
