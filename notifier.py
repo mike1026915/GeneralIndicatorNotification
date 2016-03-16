@@ -43,4 +43,4 @@ class Notifier(object):
 
         for user, msg in msg_strs.iteritems():
             if msg != "":
-                NotifierFactory.getSender(user.push_method)(user, msg)
+                NotifierFactory.getSender(user.push_method)(user, msg.encode('utf-8'))
