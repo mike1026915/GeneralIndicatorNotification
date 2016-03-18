@@ -41,10 +41,8 @@ def pushbullet_send(user, msg):
         "type":"note"
     }
     data= json.dumps(data)
-    print type(data), data
     req = urllib2.Request(url, data=data, headers=header)
     response = urllib2.urlopen(req)
-    print response    
 
 
 SEND_METHOD = {"qpush":qpush_send, "pushbullet":pushbullet_send}

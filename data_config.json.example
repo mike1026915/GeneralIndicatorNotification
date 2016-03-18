@@ -16,5 +16,18 @@
                 "message": "USD is less than 30 dollars "
             }
         ]
+    },
+    {
+        "url": "http://example.com/get_special_format_data"
+        "indicators":
+        [
+            {
+                "name": "Sample",
+                "parser": "sample_parser",
+                "condition": "> 50",
+                "message": "Just a test"
+            }
+        ]
+
     }
 ]

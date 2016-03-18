@@ -1,21 +1,27 @@
 import json
 import urllib2
 from lxml import etree
-
+import parser_method
 
 class IndicatorWatcher(object):
     def __init__(self, indicator_config):
         with open(indicator_config) as config_file:
             self._config_data = json.load(config_file)
 
-    def _get_web_page_etree(self,url):
+    def _get_web_page_etree(self, response):
         """
-            Given url, it returns the etree object
+            Given HTML response, it returns the etree object
         """
-        response = urllib2.urlopen(url)
         htmlparser = etree.HTMLParser()
         tree = etree.parse(response, htmlparser)
         return tree
+
+    def _get_html_response(self, url):
+        """
+            Given url, it returns the HTML response
+        """
+        response = urllib2.urlopen(url)
+        return response
 
     def _get_xpath_result(self, tree, xpath):
         """
@@ -69,22 +75,44 @@ class IndicatorWatcher(object):
     def execute(self):
         result_list = []
         for web in self._config_data:
-            tree = self._get_web_page_etree(web['url'])
             for indicator in web['indicators']:
-                find_list = self._get_xpath_result(tree, indicator['xpath'])
+                response = self._get_html_response(web['url'])
+                if 'xpath' in indicator:
+                    tree = self._get_web_page_etree(response)
+                    find_list = self._get_xpath_result(tree, indicator['xpath'])
+                elif 'parser' in indicator:
+                    try:
+                        parser = getattr(parser_method, indicator['parser'])
+                        find_list = parser(response.read())
+                    except BaseException as e:
+                        print "Please check the parser function %s, Error: %s" % (indicator['parser'], e)
+                if find_list is None:
+                    find_list = []
+
+                if not isinstance(find_list, list):
+                    find_list = [find_list,]
+
                 if len(find_list) == 0:
-                    message =  "It doesn't find anything based on the given xpath. Please check the xpath"
+                    message =  "It doesn't find anything. Please check %s" % indicator['name']
                     print message
                     result_list.append({'name': indicator['name'], 'value': "N/A", 'message': message})
                     continue
                 for result in find_list:
-                    print indicator['name'].encode("utf8"), indicator['xpath'].encode("utf8"), result.text,
+                    if hasattr(result, 'text'):
+                        result = result.text
+                    if 'xpath' in indicator:
+                        print indicator['name'].encode("utf8"), indicator['xpath'].encode("utf8"), result
+                    elif 'parser' in indicator:
+                        print indicator['name'].encode("utf8"), indicator['parser'], result
                     try:
-                        if self._eval_condition(result.text, indicator['condition'].strip()):
+                        if self._eval_condition(str(result), indicator['condition'].strip()):
                             name = indicator['name']
                             message = indicator['message']
-                            result_list.append({'name': name, 'value': result.text, 'message': message})
+                            result_list.append({'name': name, 'value': result, 'message': message})
                     except BaseException as e:
+                        import traceback
+                        tb = traceback.format_exc()
+                        print tb
                         print "Unexpected Error. %s" % str(e)
         return result_list
 
