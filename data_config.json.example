@@ -18,7 +18,7 @@
         ]
     },
     {
-        "url": "http://example.com/get_special_format_data"
+        "url": "http://example.com/get_special_format_data",
         "indicators":
         [
             {
