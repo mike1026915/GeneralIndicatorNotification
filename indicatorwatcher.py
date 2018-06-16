@@ -1,7 +1,32 @@
 import json
 import urllib2
+import requests
+import StringIO
 from lxml import etree
 import parser_method
+
+
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.poolmanager import PoolManager
+import ssl
+
+class MyAdapter(HTTPAdapter):
+    def init_poolmanager(self, connections, maxsize, block=False):
+        self.poolmanager = PoolManager(num_pools=connections,
+                                       maxsize=maxsize,
+                                       block=block,
+                                       ssl_version=ssl.PROTOCOL_TLSv1)
+
+import ssl  
+from functools import wraps  
+def sslwrap(func):  
+    @wraps(func)  
+    def bar(*args, **kw):  
+        kw['ssl_version'] = ssl.PROTOCOL_TLSv1
+        return func(*args, **kw)  
+    return bar  
+ssl.wrap_socket = sslwrap(ssl.wrap_socket)  
+print ssl.wrap_socket
 
 class IndicatorWatcher(object):
     def __init__(self, indicator_config):
@@ -20,8 +45,11 @@ class IndicatorWatcher(object):
         """
             Given url, it returns the HTML response
         """
-        response = urllib2.urlopen(url)
-        return response
+        #response = requests.get(url)
+        s = requests.Session()
+        s.mount('https://', MyAdapter())
+        response = s.get(url)
+        return StringIO.StringIO(response.text)
 
     def _get_xpath_result(self, tree, xpath):
         """
